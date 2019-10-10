@@ -4,13 +4,13 @@ import './App.css';
 import STORE from './STORE';
 // import Card from './Card';
 
-// function omit(obj, keyToOmit) {
-//   return Object.entries(obj).reduce(
-//     (newObj, [key, value]) =>
-//         key === keyToOmit ? newObj : {...newObj, [key]: value},
-//     {}
-//   );
-// }
+function omit(obj, keyToOmit) {
+  return Object.entries(obj).reduce(
+    (newObj, [key, value]) =>
+        key === keyToOmit ? newObj : {...newObj, [key]: value},
+    {}
+  );
+}
 
 const newRandomCard = () => {
   const id = Math.random().toString(36).substring(2, 4)
@@ -28,7 +28,7 @@ class App extends Component {
     };
 
     handleAddNewCard = (listId) => {
-      console.log('test')
+      console.log('handle to add a random card is called')
       const newCard = newRandomCard()
       const addToList =
         this.state.store.lists.map(list => {
@@ -50,14 +50,21 @@ class App extends Component {
       })
     }
 
-    // handleDeleteCard = (cardId) => {
-    //   const newList = this.state.lists.filter(itm => itm !== cardId)
-    //   this.setState({
-    //    lists: newList
-    //    allCards: newCards
-    //   })
-    //   const newCards = omit (allCards, cardId)
-    // }
+    handleDeleteCard = (cardId) => {
+      console.log('handle delete item called', {cardId})
+      const newList = this.state.store.lists.map(list => ({
+        ...list, 
+        cardIds: list.cardIds.filter(item => item !== cardId)
+      }))
+      // const newList2 = this.state.lists.map((item => ...item, cardId)
+      console.log(newList, 'test')
+      const newCards = omit (this.state.store.allCards, cardId)
+      this.setState({
+        store: {
+       lists: newList,
+       allCards: newCards
+      }})
+    }
 
   render() {
     const { store } = this.state
@@ -74,6 +81,7 @@ class App extends Component {
               header={list.header}
               cards={list.cardIds.map(id => store.allCards[id])}
               handleAddNewCard={this.handleAddNewCard}
+              handleDeleteCard={this.handleDeleteCard}
             />
           ))}
         </div>
