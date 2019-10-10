@@ -1,47 +1,62 @@
 import React, { Component } from 'react';
 import List from './List'
 import './App.css';
-import './STORE';
-import Card from './Card';
+import STORE from './STORE';
+// import Card from './Card';
 
-function omit(obj, keyToOmit) {
-  return Object.entries(obj).reduce(
-    (newObj, [key, value]) =>
-        key === keyToOmit ? newObj : {...newObj, [key]: value},
-    {}
-  );
+// function omit(obj, keyToOmit) {
+//   return Object.entries(obj).reduce(
+//     (newObj, [key, value]) =>
+//         key === keyToOmit ? newObj : {...newObj, [key]: value},
+//     {}
+//   );
+// }
+
+const newRandomCard = () => {
+  const id = Math.random().toString(36).substring(2, 4)
+    + Math.random().toString(36).substring(2, 4);
+  return {
+    id,
+    title: `Random Card ${id}`,
+    content: 'lorem ipsum',
+  }
 }
 
 class App extends Component {
     state = {
-      STORE:[]
+      store: STORE,
     };
 
-    newRandomCard = () => {
-      const id = Math.random().toString(36).substring(2, 4)
-        + Math.random().toString(36).substring(2, 4);
-      return {
-        id,
-        title: `Random Card ${id}`,
-        content: 'lorem ipsum',
-      }
-    }
-
-    handleAddNewCard = () => {
-      
-    }
-
-    handleDeleteCard = (cardId) => {
-      const newList = this.state.lists.filter(itm => itm !== cardId)
+    handleAddNewCard = (listId) => {
+      const newCard = newRandomCard()
+      const addToList =
+        this.state.store.lists.map(list => {
+          if (list.id === listId) {
+            return {
+              ...list, cardIds: [...list.cardIds, newCard.id]
+            };
+          }
+          return list;
+        })
       this.setState({
-       lists: newList
-      //  allCards: newCards
+          store: {
+            list: addToList,
+            allCards: {...this.state.store.allCards, [newCard.id]: newCard}
+          }
       })
-      // const newCards = omit (allCards, cardId)
     }
+
+    // handleDeleteCard = (cardId) => {
+    //   const newList = this.state.lists.filter(itm => itm !== cardId)
+    //   this.setState({
+    //    lists: newList
+    //    allCards: newCards
+    //   })
+    //   const newCards = omit (allCards, cardId)
+    // }
 
   render() {
-    const { store } = this.props
+    const { store } = this.state
     return (
       <main className='App'>
         <header className='App-header'>
@@ -50,20 +65,15 @@ class App extends Component {
         <div className='App-list'>
           {store.lists.map(list => (
             <List
+              id={list.id}
               key={list.id}
               header={list.header}
               cards={list.cardIds.map(id => store.allCards[id])}
-              handleAddNewCard={this.handleAddNewCard}
+              clickAdd={this.handleAddNewCard}
             />
           ))}
         </div>
-        <section>
-          <Card 
-          cards={this.state.STORE.allCards}
-          onDeleteItem={this.handleDeleteItem}
-          onnewRandomCard={this.newRandomCard}
-          />
-        </section>
+
       </main>
     );
   }
