@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import List from './List'
 import './App.css';
 import './STORE';
+import Card from './Card';
+
+function omit(obj, keyToOmit) {
+  return Object.entries(obj).reduce(
+    (newObj, [key, value]) =>
+        key === keyToOmit ? newObj : {...newObj, [key]: value},
+    {}
+  );
+}
+
 class App extends Component {
     state = {
       STORE:[]
@@ -16,11 +26,14 @@ class App extends Component {
         content: 'lorem ipsum',
       }
     }
-    handleDeleteItem = (item) => {
-      const newItems = this.state.shoppingItems.filter(itm => itm !== item)
+
+    handleDeleteCard = (cardId) => {
+      const newList = this.state.lists.filter(itm => itm !== cardId)
       this.setState({
-        shoppingItems: newItems
+       lists: newList
+       allCards: new
       })
+      omit (allCards, cardId)
     }
 
   render() {
@@ -41,7 +54,7 @@ class App extends Component {
         </div>
         <section>
           <Card 
-          cards={this.state.STORE}
+          cards={this.state.STORE.allCards}
           onDeleteItem={this.handleDeleteItem}
           onnewRandomCard={this.newRandomCard}
           />
