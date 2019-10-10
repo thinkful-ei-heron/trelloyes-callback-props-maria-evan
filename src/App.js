@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
 import List from './List'
 import './App.css';
-
+import './STORE';
 class App extends Component {
-  static defaultProps = {
-    store: {
-      lists: [],
-      allCards: {},
+    state = {
+      STORE:[]
+    };
+
+    newRandomCard = () => {
+      const id = Math.random().toString(36).substring(2, 4)
+        + Math.random().toString(36).substring(2, 4);
+      return {
+        id,
+        title: `Random Card ${id}`,
+        content: 'lorem ipsum',
+      }
     }
-  };
+    handleDeleteItem = (item) => {
+      const newItems = this.state.shoppingItems.filter(itm => itm !== item)
+      this.setState({
+        shoppingItems: newItems
+      })
+    }
 
   render() {
     const { store } = this.props
@@ -26,6 +39,13 @@ class App extends Component {
             />
           ))}
         </div>
+        <section>
+          <Card 
+          cards={this.state.STORE}
+          onDeleteItem={this.handleDeleteItem}
+          onnewRandomCard={this.newRandomCard}
+          />
+        </section>
       </main>
     );
   }
