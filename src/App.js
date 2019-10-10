@@ -29,11 +29,12 @@ class App extends Component {
 
     handleDeleteCard = (cardId) => {
       const newList = this.state.lists.filter(itm => itm !== cardId)
+      const newCard =
       this.setState({
        lists: newList
-       allCards: new
+       allCards: newCards
       })
-      omit (allCards, cardId)
+      const newCards = omit (allCards, cardId)
     }
 
   render() {
